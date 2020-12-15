@@ -131,6 +131,7 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
   }
   names(cluster) <- rownames(X)
 
+
   out <- list("omega_full" = om_hat_full, "omega_aggregated" = om_hat_agg, "cluster" = cluster, "K" = K, "refit" = refit,
               "omega_block_re_order" = omega_block_re_order)
 }
