@@ -12,13 +12,15 @@
 #' @param it_in_refit Number of inner stages of the LA-ADMM algorithm for re-fitting. Default is 100
 #' @param it_out_refit Number of outer stages of the LA-ADMM algorithm for re-fitting. Default is 10
 #' @param hc Logical indicator whether or not hierarchical clustering on the aggregated precision matrix needs to be performed to help visualize the block-structure
+#' @param plot Logical indicator whether or not a plot of the sparsity pattern of the full and aggregated precision matrix needs to be returned
 #' @return A list with the following components
 #' \item{\code{omega_full}}{Estimated (\eqn{p}x\eqn{p}) precision matrix}
 #' \item{\code{omega_aggregated}}{Estimated (\eqn{K}x\eqn{K}) precision matrix}
 #' \item{\code{cluster}}{Numeric vector indicating the cluster groups for each of the \eqn{p} original variables}
-#' \item{\code{K}}{Number of aggregated groups detected by tag-lasso}
+#' \item{\code{M}}{The (\eqn{p}x\eqn{K} membership matrix)}
 taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
-                     rho = 10^-2, it_in = 100, it_out = 10,  it_in_refit = 1000, it_out_refit = 20, hc = TRUE){
+                     rho = 10^-2, it_in = 100, it_out = 10,  it_in_refit = 1000, it_out_refit = 20, hc = TRUE,
+                     plot = FALSE){
 
   #### Preliminaries ####
   # Dimensions
@@ -131,7 +133,19 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
   }
   names(cluster) <- rownames(X)
 
+  if(plot){
+    corrplot(om_hat_full, cl.pos = "n", method = "color", main = "Full Network", mar = c(0,0,1,0),
+             addgrid.col = "black", tl.cex = 2, cex.main = 1.5, is.corr = F, col = c("#F0F0F0", "White", "Black"),
+             tl.col = "black")
 
-  out <- list("omega_full" = om_hat_full, "omega_aggregated" = om_hat_agg, "cluster" = cluster, "K" = K, "refit" = refit,
-              "omega_block_re_order" = omega_block_re_order)
+    corrplot(om_hat_agg, cl.pos = "n", method = "color", main = "Aggregated Network", mar = c(0,0,1,0),
+             addgrid.col = "black", tl.cex = 2, cex.main = 1.5, is.corr = F, col = c("#F0F0F0", "White", "Black"),
+             tl.col = "black")
+  }
+
+
+  out <- list("omega_full" = om_hat_full, "omega_aggregated" = om_hat_agg,
+              "cluster" = cluster, "M" = M)
+              # "refit" = refit,
+              # "omega_block_re_order" = omega_block_re_order)
 }

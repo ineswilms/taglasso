@@ -12,4 +12,4 @@ RoxygenNote: 7.1.1
 LinkingTo: 
     Rcpp, RcppArmadillo
 Imports: 
-    Rcpp, gdata, stats, MASS
+    Rcpp, gdata, stats, MASS, corrplot
