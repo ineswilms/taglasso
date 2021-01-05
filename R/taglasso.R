@@ -58,6 +58,7 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
     check <- apply(AZ, 1, unique_rows = unique_rows, function(unique_rows, X){all(X==unique_rows[i,])})
     cluster[which(check==T)] <- i
   }
+  names(cluster) <- colnames(X)
 
   #### Level of sparsity ####
   om_P <- (fit_taglasso$om3!=0)*1 # 1 if non-zero
@@ -102,9 +103,9 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
 
   omega_block[lower.tri(omega_block)] <- t(omega_block)[lower.tri(omega_block)]
   omega_aggregated <- MASS::ginv(M)%*%round(omega_block, 2)%*%MASS::ginv(t(M))
-  d_agg <- solve(t(M)%*%solve(d)%*%M)
+  D_agg <- solve(t(M)%*%solve(refit$D)%*%M)
   # om_hat_agg <- omega_aggregated + diag(d_agg)
-  om_hat_agg <- omega_aggregated + d_agg
+  om_hat_agg <- omega_aggregated + D_agg
   rownames(om_hat_agg) <- paste0("cluster", 1:K)
   colnames(om_hat_agg) <- 1:K
 
@@ -131,31 +132,32 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
       counter = counter + 1
     }
     cluster <- clusternew
-    om_hat_full <- omega_full_hc + diag(d[cluster_re_order])
-    rownames(om_hat_full) <- colnames(X)
+    names(cluster) <- colnames(X)
+    om_hat_full <- omega_full_hc + diag(d[cluster_re_order], p)
+    rownames(om_hat_full) <- names(sort(cluster))
     colnames(om_hat_full) <- colnames(omega_full_hc)
 
     omega_aggregated_hc <- omega_aggregated[hc_omega_agg$order, hc_omega_agg$order]
     # colnames(omega_aggregated_hc) <- 1:K
-    om_hat_agg <- omega_aggregated_hc + diag(d_agg[hc_omega_agg$order])
+    om_hat_agg <- omega_aggregated_hc + diag(diag(D_agg)[hc_omega_agg$order], K)
     rownames(om_hat_agg) <- paste0("cluster", 1:K)
     colnames(om_hat_agg) <- 1:K
   }
-  names(cluster) <- colnames(X)
+
 
   if(plot){
-    corrplot(om_hat_full, cl.pos = "n", method = "color", main = "Full Network", mar = c(0,0,1,0),
+    corrplot(om_hat_full!=0, cl.pos = "n", method = "color", main = "Full Network", mar = c(0,0,1,0),
              addgrid.col = "black", tl.cex = 2, cex.main = 1.5, is.corr = F, col = c("#F0F0F0", "White", "Black"),
              tl.col = "black")
 
-    corrplot(om_hat_agg, cl.pos = "n", method = "color", main = "Aggregated Network", mar = c(0,0,1,0),
+    corrplot(om_hat_agg!=0, cl.pos = "n", method = "color", main = "Aggregated Network", mar = c(0,0,1,0),
              addgrid.col = "black", tl.cex = 2, cex.main = 1.5, is.corr = F, col = c("#F0F0F0", "White", "Black"),
              tl.col = "black")
   }
 
 
   out <- list("omega_full" = om_hat_full, "omega_aggregated" = om_hat_agg,
-              "cluster" = cluster, "M" = M)
-              # "refit" = refit,
-              # "omega_block_re_order" = omega_block_re_order)
+              "cluster" = cluster, "M" = M,
+              "D" = refit$D)
+
 }
