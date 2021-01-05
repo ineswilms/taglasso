@@ -15,7 +15,8 @@ taglasso(
   it_out = 10,
   it_in_refit = 1000,
   it_out_refit = 20,
-  hc = TRUE
+  hc = TRUE,
+  plot = FALSE
 )
 }
 \arguments{
@@ -40,13 +41,15 @@ taglasso(
 \item{it_out_refit}{Number of outer stages of the LA-ADMM algorithm for re-fitting. Default is 10}
 
 \item{hc}{Logical indicator whether or not hierarchical clustering on the aggregated precision matrix needs to be performed to help visualize the block-structure}
+
+\item{plot}{Logical indicator whether or not a plot of the sparsity pattern of the full and aggregated precision matrix needs to be returned}
 }
 \value{
 A list with the following components
 \item{\code{omega_full}}{Estimated (\eqn{p}x\eqn{p}) precision matrix}
 \item{\code{omega_aggregated}}{Estimated (\eqn{K}x\eqn{K}) precision matrix}
 \item{\code{cluster}}{Numeric vector indicating the cluster groups for each of the \eqn{p} original variables}
-\item{\code{K}}{Number of aggregated groups detected by tag-lasso}
+\item{\code{M}}{The (\eqn{p}x\eqn{K} membership matrix)}
 }
 \description{
 This function computes the tag-lasso estimator for fixed tuning parameters lambda1 and lambda2

@@ -79,6 +79,7 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
   d <- diag(refit$D)
   re_order <- c()
   M <- matrix(0, p, K) # Membership matrix
+  rownames(M) <- colnames(X)
   for(i.c in 1:K){
     re_order <- c(re_order, which(cluster==i.c))
     M[which(cluster==i.c), i.c] = 1
@@ -88,20 +89,24 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
   colnames(omega_block_re_order) <- rep("", ncol(omega_block_re_order))
   nbr_variables <- 0
   counter <- 1
-  d_agg <- rep(NA, K)
+  # d_agg <- rep(NA, K)
   for(i in 1:K){
     colnames(omega_block_re_order)[1+nbr_variables] <- counter
     nbr_variables <- nbr_variables + length(which(sort(cluster)==i))
-    d_agg[i] <- mean(d[which(sort(cluster)==i)])
+    # d_agg[i] <- mean(d[which(sort(cluster)==i)])
     counter = counter + 1
   }
   om_hat_full <- round(omega_block_re_order, 2) + diag(d[re_order])
+  rownames(om_hat_full) <- colnames(X)
+  colnames(om_hat_full) <- colnames(omega_block_re_order)
 
   omega_block[lower.tri(omega_block)] <- t(omega_block)[lower.tri(omega_block)]
   omega_aggregated <- MASS::ginv(M)%*%round(omega_block, 2)%*%MASS::ginv(t(M))
-  rownames(omega_aggregated) <- paste0("cluster", 1:K)
-  colnames(omega_aggregated) <- 1:K
-  om_hat_agg <- omega_aggregated + diag(d_agg)
+  d_agg <- solve(t(M)%*%solve(d)%*%M)
+  # om_hat_agg <- omega_aggregated + diag(d_agg)
+  om_hat_agg <- omega_aggregated + d_agg
+  rownames(om_hat_agg) <- paste0("cluster", 1:K)
+  colnames(om_hat_agg) <- 1:K
 
   hc_order <- NULL
   if(hc){ # Re-order rows/columns of precision matrices to better visualize the block structure based on hierarchical clustering
@@ -127,11 +132,16 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
     }
     cluster <- clusternew
     om_hat_full <- omega_full_hc + diag(d[cluster_re_order])
+    rownames(om_hat_full) <- colnames(X)
+    colnames(om_hat_full) <- colnames(omega_full_hc)
+
     omega_aggregated_hc <- omega_aggregated[hc_omega_agg$order, hc_omega_agg$order]
-    colnames(omega_aggregated_hc) <- 1:K
+    # colnames(omega_aggregated_hc) <- 1:K
     om_hat_agg <- omega_aggregated_hc + diag(d_agg[hc_omega_agg$order])
+    rownames(om_hat_agg) <- paste0("cluster", 1:K)
+    colnames(om_hat_agg) <- 1:K
   }
-  names(cluster) <- rownames(X)
+  names(cluster) <- colnames(X)
 
   if(plot){
     corrplot(om_hat_full, cl.pos = "n", method = "color", main = "Full Network", mar = c(0,0,1,0),
