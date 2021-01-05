@@ -110,6 +110,7 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
   colnames(om_hat_agg) <- 1:K
 
   hc_order <- NULL
+  hc_omega_agg <- NULL
   if(hc){ # Re-order rows/columns of precision matrices to better visualize the block structure based on hierarchical clustering
     omega_agg <- round(omega_aggregated, 2)!=0
     hc_omega_agg <- stats::hclust(d = stats::dist(omega_agg*1))
@@ -158,6 +159,7 @@ taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
 
   out <- list("omega_full" = om_hat_full, "omega_aggregated" = om_hat_agg,
               "cluster" = cluster, "M" = M,
-              "D" = refit$D)
-
+              "D" = refit$D,
+              "refit" = refit, "fit" = fit_taglasso,
+              "omega_block_re_order" = omega_block_re_order, "hc_omega_agg" = hc_omega_agg)
 }
