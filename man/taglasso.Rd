@@ -13,8 +13,8 @@ taglasso(
   rho = 10^-2,
   it_in = 100,
   it_out = 10,
-  it_in_refit = 1000,
-  it_out_refit = 20,
+  it_in_refit = 100,
+  it_out_refit = 10,
   hc = TRUE,
   plot = FALSE
 )

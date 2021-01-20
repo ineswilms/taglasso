@@ -19,7 +19,7 @@
 #' \item{\code{cluster}}{Numeric vector indicating the cluster groups for each of the \eqn{p} original variables}
 #' \item{\code{M}}{The (\eqn{p}x\eqn{K} membership matrix)}
 taglasso <- function(X, A, pendiag = F,  lambda1, lambda2,
-                     rho = 10^-2, it_in = 100, it_out = 10,  it_in_refit = 1000, it_out_refit = 20, hc = TRUE,
+                     rho = 10^-2, it_in = 100, it_out = 10,  it_in_refit = 100, it_out_refit = 10, hc = TRUE,
                      plot = FALSE){
 
   #### Preliminaries ####
