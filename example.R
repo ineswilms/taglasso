@@ -1,10 +1,10 @@
 rm(list=ls())
 
-# Install package from GitHub
-# install.packages("devtools")
-# devtools::install_github("ineswilms/taglasso")
+#### Install package from GitHub ####
+install.packages("devtools")
+devtools::install_github("ineswilms/taglasso")
 
-# Load the data
+#### Pre-process the data ####
 data('rv')
 rv_data <- rv$data
 A <- rv$A
@@ -40,9 +40,10 @@ resid_HAR <- apply(rv_data, 2, estimate.HAR)
 data <- resid_HAR
 
 #### 5-fold cross-validation to select the regularization parameters ####
+library(parallel)
 ptm <- proc.time()
 rv_taglasso_cv <- taglasso_cv(X = data, A = A, seed = floor(abs(data[1]*1000)), fold = 5,
-                              l1gran = 5, l2gran = 5, nc = 1, do_parallel = FALSE)
+                              l1gran = 5, l2gran = 5, nc = detectCores()-1, do_parallel = FALSE)
 proc.time() - ptm
 
 #### tag-lasso fit ####
