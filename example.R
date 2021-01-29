@@ -44,7 +44,7 @@ data <- resid_HAR
 library(parallel)
 ptm <- proc.time()
 rv_taglasso_cv <- taglasso_cv(X = data, A = A, seed = floor(abs(data[1]*1000)), fold = 5,
-                              l1gran = 5, l2gran = 5, nc = detectCores()-1, do_parallel = FALSE)
+                              l1gran = 5, l2gran = 5, nc = detectCores()-1, do_parallel = TRUE)
 proc.time() - ptm
 
 #### tag-lasso fit ####
