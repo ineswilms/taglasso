@@ -12,17 +12,6 @@ A <- rv$A
 # Estimate HAR models
 estimate.HAR <- function(y){
   # Function : HAR model with daily, weekly and monthly computed for the realized variances
-
-  # INPUT
-  # XHAR (matrix) : Tx22 : RV_{t-k} for k=1, ..., 22
-  # YHAR (vector) : Tx1 : RV_t
-  # Xtest
-  # Ytest
-
-  # OUTPUT
-  # beta : estimated parameter (matrix : 3x1)
-  # BIC : BIC value
-
   HARdata <- embed(y, 22+1)
   XHAR <- HARdata[, -1]
 
