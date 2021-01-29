@@ -3,6 +3,7 @@ rm(list=ls())
 #### Install package from GitHub ####
 install.packages("devtools")
 devtools::install_github("ineswilms/taglasso")
+library(taglasso)
 
 #### Pre-process the data ####
 data('rv')

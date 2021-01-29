@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.gitignore
 src/*.o
 src/*.so
 src/*.dll
