@@ -14,8 +14,6 @@ estimate.HAR <- function(y){
   # Function : HAR model with daily, weekly and monthly computed for the realized variances
   HARdata <- embed(y, 22+1)
   XHAR <- HARdata[, -1]
-
-  # Start Function
   YHAR <- HARdata[,1]
   X.D <- as.matrix(XHAR[,1])
   X.W <- as.matrix(apply(XHAR[,1:5]/5,1,sum))
@@ -24,7 +22,6 @@ estimate.HAR <- function(y){
   beta.HAR <- solve(t(X.HAR)%*%X.HAR)%*%t(X.HAR)%*%YHAR
   resid.HAR <- YHAR - X.HAR%*%beta.HAR
   return(resid.HAR)
-
 }
 resid_HAR <- apply(rv_data, 2, estimate.HAR)
 data <- resid_HAR
