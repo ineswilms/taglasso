@@ -34,7 +34,7 @@ rv_taglasso_cv <- taglasso_cv(X = data, A = A, seed = floor(abs(data[1]*1000)), 
 proc.time() - ptm
 
 #### tag-lasso fit ####
-rv_taglasso <- taglasso(X = data, A = rv_A, lambda1 = rv_taglasso_cv$l1opt, lambda2 = rv_taglasso_cv$l2opt, hc = TRUE, plot = TRUE)
+rv_taglasso <- taglasso(X = data, A = A, lambda1 = rv_taglasso_cv$l1opt, lambda2 = rv_taglasso_cv$l2opt, hc = TRUE, plot = TRUE)
 
 #### networks ####
 library(corrplot)
